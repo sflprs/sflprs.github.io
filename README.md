@@ -8,7 +8,7 @@ The Society was founded in San Francisco in 1853 and today runs Heritage on the 
 
 ## How to use it
 
-- **Online:** open https://sflprs.github.io. Pick a volume on the left, or type in the search box to find words in the typed text of every page. Click a page to see it full size; use ◀ ▶ or the arrow keys to turn pages, 📝 to show the machine-read text, and ↻ to rotate pages that were photographed sideways.
+- **Online:** open https://sflprs.github.io. Pick a volume on the left, or type in the search box to find words in the text of every page. Click a page to see it full size; use ◀ ▶ or the arrow keys to turn pages, 📝 to show the page’s text, and ↻ to rotate pages that were photographed sideways.
 - **From a downloaded copy:** download or clone each repository, keeping its name, and put the folders side by side in one folder and open `sflprs.github.io/index.html` in a browser. No internet connection or installation is needed.
 - **Find a file:** `manifest.csv` here lists every page in every repository, with its original scan file name, checksum and the date found on the page.
 
@@ -99,13 +99,26 @@ Commemorative volumes. Repository: [special-items](https://github.com/SFLPRS/spe
 
 ## Things to know
 
-- **Text is machine-read (OCR) and contains errors.** Typed pages read reasonably well. **Handwritten pages (most of T1, C1, A1, A2 and the 1953 guest book) are not searchable.** 378 pages photographed sideways were read again after turning them.
+- **Typed pages are machine-read (OCR) and contain errors.** They read reasonably well. 378 pages photographed sideways were read again after turning them.
+- **Handwritten pages were transcribed by Claude (AI) in October 2026:** 263 pages of T1, C1, A1, A2 and the 1953 guest book (S1). Each file starts with a note saying so. Spelling is as written; `[?]` marks an uncertain reading and `[illegible]` a word that could not be read. Reliability varies by volume:
+  - **T1** (1906–1930, clear hand) and **A1** (1941–55): good, with few uncertain words.
+  - **A2** (1942–54): good until the last few years, which are in a rough hand.
+  - **C1** (Crocker Home 1925–31): the hardest. About 1,200 `[?]` marks, mostly residents’ and applicants’ names. Use it as a finding aid and check the photo. Board members’ names were made consistent using the typed 1929 officers list (page C1_0069).
+  - **S1** (guest book): faint signatures; many names are uncertain.
+- **Some photos are partial or cut off** (for example C1_0071, A2_0024, A2_0052, A2_0062, T1_0016, T1_0018, T1_0019), so their transcriptions are incomplete; the files say so in brackets.
 - **Dates** are the first date found near the top of each page — a guide, not a catalog. A blank means no date was found.
 - **Possible re-shots:** 139 pages closely match another page’s text (`possible_reshot_of` in `manifest.csv`). Most are the same page photographed twice; all were kept. Part B of C2 is an earlier, partial pass of the same book.
 - **Board of Managers vs. Board of Directors:** M4 (1977–80) is labelled “Board of Directors” on its cover, but it is the women’s board, which briefly used that name. The modern Board of Directors volumes (2000–2020) are a separate series.
 - **Gaps:** no Trustees volumes were photographed for 1956–68; no Board of Managers meeting minutes before 1954 (only the 1941–55 annual reports) or for 1969–71, 1985–88 or 1992–95; and no Board of Directors volumes after 2020.
 
 ## Changelog
+
+### 2026-10-17
+
+- Transcribed 263 handwritten pages (T1, C1, A1, A2, S1) into the `text/` folders and the viewer’s search, replacing the unreadable OCR for those pages.
+- Viewer: heading now “San Francisco Ladies Protection and Relief Society”; tab title “SFLP&RS”; added a GitHub link next to the search box.
+- Added `BUILD-NOTES.md`, describing how the archive was built and how to update it.
+- Working files moved from D: to Google Drive (G:).
 
 ### 2026-10-11
 

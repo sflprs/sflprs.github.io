@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SFLP&amp;RS</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root {
   --bg: #f7f4ee;
@@ -19,11 +22,17 @@
 body { margin: 0; font: 15px/1.45 Georgia, "Times New Roman", serif; color: var(--ink); background: var(--bg); }
 header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
 header h1 { font-size: 18px; margin: 0; flex: 1 1 auto; }
+header h1 .logo { vertical-align: middle; border-radius: 4px; margin: -4px 4px 0 0; }
 header h1 small { color: var(--muted); font-weight: normal; }
 #source { display: flex; text-decoration: none; }
 #search { flex: 1 1 260px; max-width: 420px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
 #layout { display: flex; min-height: calc(100vh - 56px); }
 nav { width: var(--side); flex: none; border-right: 1px solid var(--line); background: var(--panel); padding: 10px; overflow-y: auto; max-height: calc(100vh - 56px); position: sticky; top: 56px; }
+nav .about { display: block; padding: 5px 8px; margin-bottom: 4px; color: var(--accent); text-decoration: none; font-size: 14px; border-radius: 5px; }
+nav .about:hover { background: var(--bg); }
+nav .about.active { background: var(--accent); color: #fff; }
+#aboutframe { display: block; width: 100%; height: calc(100vh - 90px); border: 0; }
+#grid[hidden], #more[hidden], #aboutframe[hidden] { display: none; }
 nav h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); margin: 14px 4px 4px; }
 nav p { margin: 0 4px 6px; font-size: 12px; color: var(--muted); }
 nav button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 5px 8px; border-radius: 5px; font: inherit; font-size: 14px; cursor: pointer; color: var(--ink); }
@@ -64,8 +73,8 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 16px
 </head>
 <body>
 <header>
-  <h1>📜 San Francisco Ladies Protection and Relief Society <small id="subtitle"></small></h1>
-  <input id="search" type="search" placeholder="🔍 Search the typed text of every page…">
+  <h1><img class="logo" src="apple-touch-icon.png" alt="" width="26" height="26"> San Francisco Ladies Protection and Relief Society <small id="subtitle"></small></h1>
+  <input id="search" type="search" placeholder="🔍 Search the text of every page…">
   <a id="source" href="https://github.com/SFLPRS/sflprs.github.io" target="_blank" rel="noopener" title="Source on GitHub"><img src="https://pushme-pullyou.github.io/assets/svg/github-octicon.svg" alt="Source on GitHub" width="22" height="22"></a>
 </header>
 <div id="layout">
@@ -74,6 +83,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 16px
     <p id="info"></p>
     <div id="grid"></div>
     <button id="more" hidden>Show more</button>
+    <iframe id="aboutframe" title="About" hidden></iframe>
   </main>
 </div>
 <div id="viewer">
@@ -114,7 +124,8 @@ const state = {
   query: "",
   current: -1,      // index in state.shown open in the viewer
   turn: 0,          // extra rotation (degrees) chosen in the viewer
-  showText: false
+  showText: false,
+  about: false      // true while the About page is shown
 };
 
 function loadSettings() {
@@ -155,11 +166,12 @@ function buildPages() {
 }
 
 function drawNav() {
-  const html = ARC.series.map(series => `
+  const about = `<a class="about ${state.about ? "active" : ""}" href="about.html">ℹ️ About the Society and this archive</a>`;
+  const html = about + ARC.series.map(series => `
     <h2>${series.title}</h2>
     <p>${series.note || ""}</p>
     ${series.volumes.map(volume => `
-      <button data-volume="${volume.id}" class="${volume.id === state.volume ? "active" : ""}">
+      <button data-volume="${volume.id}" class="${!state.about && volume.id === state.volume ? "active" : ""}">
         ${volume.title}<span>${volume.pages.length}</span>
       </button>`).join("")}
   `).join("");
@@ -246,10 +258,27 @@ function step(delta) {
   if (next >= 0 && next < state.shown.length) openViewer(next);
 }
 
+function showAbout(on) {
+  state.about = on;
+  const frame = document.getElementById("aboutframe");
+  if (on && !frame.getAttribute("src")) frame.src = "about.html";
+  frame.hidden = !on;
+  document.getElementById("info").hidden = on;
+  document.getElementById("grid").hidden = on;
+  if (on) document.getElementById("more").hidden = true;
+  drawNav();
+}
+
 function onNavClick(event) {
+  if (event.target.closest(".about")) {
+    event.preventDefault();
+    showAbout(true);
+    return;
+  }
   const button = event.target.closest("button");
   if (!button) return;
   state.volume = button.dataset.volume;
+  showAbout(false);
   state.query = "";
   document.getElementById("search").value = "";
   saveSettings();
@@ -265,6 +294,7 @@ function onGridClick(event) {
 
 function onSearch(event) {
   state.query = event.target.value;
+  if (state.about) showAbout(false);
   filterPages();
 }
 

@@ -1,3 +1,32 @@
+Licenses
+========
+
+This repository uses two licenses:
+
+- The photographs, transcriptions, OCR text and data files (images, text,
+  manifest.csv, checksums, viewer-data.js, viewer-text.js and README files)
+  are licensed under the Creative Commons Attribution 4.0 International
+  License (CC BY 4.0).
+- The viewer code (index.html) is licensed under the MIT License.
+
+
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+----------------------------------------------------------
+
+Copyright (c) 2026 San Francisco Ladies Protection and Relief Society
+
+You are free to share (copy and redistribute in any medium or format) and
+adapt (remix, transform and build upon) this material for any purpose, even
+commercially, as long as you give appropriate credit, provide a link to the
+license, and indicate if changes were made.
+
+Suggested credit: "San Francisco Ladies Protection and Relief Society
+Records Archive, https://sflprs.github.io, CC BY 4.0"
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+Summary: https://creativecommons.org/licenses/by/4.0/
+
+
 MIT License
 
 Copyright &copy 2026 San Francisco Ladies Protection and Relief Society

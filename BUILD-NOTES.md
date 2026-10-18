@@ -36,6 +36,16 @@ So most future changes are either small hand edits, or a short new script that r
 | 12 | Copy | Copied the original photos byte-for-byte to their new names, and made the thumbnails | `images/`, `thumbs/` |
 | 13 | Split | Regrouped everything into the 7 series repositories plus `sflprs.github.io`, then renamed the Trustees, Crocker and Directors repos to add year ranges | the current layout |
 | 14 | Verify | Checked that every manifest row has its image, text and thumbnail, and that every page in `viewer-data.js` exists on disk | — |
+| 15 | Transcribe (2026-10-17) | Handwritten pages of T1, C1, A1, A2 and S1 read from the full-size photos by Claude and written to `text/` (see below) | 263 `text/…/*.txt` files; `viewer-text.js` rebuilt |
+
+## Handwriting transcriptions (2026-10-17)
+
+- **Which pages:** the handwritten pages of T1 (51), C1 (97), A1 (33), A2 (71) and S1 (11). Typed pages, covers and spine photos were left with their OCR text.
+- **How:** each photo was cut into three overlapping strips, read by Claude, and written as one `.txt` per page in the existing `text/<volume>/` folder, replacing the OCR. `viewer-text.js` was then rebuilt by replacing only those 263 entries; every other entry is byte-for-byte unchanged.
+- **Conventions:** first line `[Transcribed from handwriting by Claude, 2026-10. …]`; spelling, abbreviations and punctuation as written; one line per paragraph; `[?]` uncertain, `[illegible]` unreadable, `[struck through: …]`, `[In margin: …]`, `[Typed insert:]`; notes for text hidden by tape or cut off by the photo; letters lost at a cut edge and supplied from context are in square brackets; raised cents written as `.50`; second shots of the same page are marked on their first line.
+- **C1 names:** recurring board members were made consistent using the typed 1929 officers list (C1_0069) and the clearest pages: Haven, Borda, Plume, Walkup, Dr. Dunham, Dr. Morrill, Dr. Rummell, Bailhache. The secretary's first name ("Amelia [?]") is a guess.
+- **Review copies:** per-volume `*-review.md` files (each page's text with a link to its photo) are kept outside the repos, in `D:\SFLPRS-transcriptions`.
+- **To correct a transcription:** edit the page's `.txt` file, then make the same change to its entry in `viewer-text.js` (key `<repo>/<volume folder>/<page>`).
 
 ## File formats
 

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SFLP&amp;RS</title>
+<style>
+:root {
+  --bg: #f7f4ee;
+  --panel: #fffdf8;
+  --ink: #2b2620;
+  --muted: #7a6f62;
+  --line: #e2dacb;
+  --accent: #8a3b2e;
+  --mark: #fde68a;
+  --side: 300px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px/1.45 Georgia, "Times New Roman", serif; color: var(--ink); background: var(--bg); }
+header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
+header h1 { font-size: 18px; margin: 0; flex: 1 1 auto; }
+header h1 small { color: var(--muted); font-weight: normal; }
+#source { display: flex; text-decoration: none; }
+#search { flex: 1 1 260px; max-width: 420px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+#layout { display: flex; min-height: calc(100vh - 56px); }
+nav { width: var(--side); flex: none; border-right: 1px solid var(--line); background: var(--panel); padding: 10px; overflow-y: auto; max-height: calc(100vh - 56px); position: sticky; top: 56px; }
+nav .about { display: block; padding: 5px 8px; margin-bottom: 4px; color: var(--accent); text-decoration: none; font-size: 14px; border-radius: 5px; }
+nav .about:hover { background: var(--bg); }
+nav h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); margin: 14px 4px 4px; }
+nav p { margin: 0 4px 6px; font-size: 12px; color: var(--muted); }
+nav button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 5px 8px; border-radius: 5px; font: inherit; font-size: 14px; cursor: pointer; color: var(--ink); }
+nav button:hover { background: var(--bg); }
+nav button.active { background: var(--accent); color: #fff; }
+nav button span { float: right; color: var(--muted); font-size: 12px; }
+nav button.active span { color: #fff; }
+main { flex: 1; padding: 14px 16px; min-width: 0; }
+#info { color: var(--muted); margin: 0 0 10px; }
+#info b { color: var(--ink); }
+#grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; cursor: pointer; }
+.card:hover { border-color: var(--accent); }
+.card img { width: 100%; height: 190px; object-fit: contain; background: #eee8dc; display: block; }
+.card div { font-size: 12px; color: var(--muted); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card .snip { white-space: normal; color: var(--ink); max-height: 4.4em; }
+mark { background: var(--mark); }
+#more { margin: 16px auto; display: block; padding: 8px 16px; font: inherit; cursor: pointer; }
+#viewer { position: fixed; inset: 0; background: #1d1813; display: none; z-index: 5; color: #eee; }
+#viewer.open { display: flex; flex-direction: column; }
+#vbar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; flex-wrap: wrap; }
+#vbar b { flex: 1; font-weight: normal; }
+#vbar button, #vbar a { background: #3a332b; color: #eee; border: 0; padding: 6px 10px; border-radius: 5px; font: inherit; cursor: pointer; text-decoration: none; font-size: 14px; }
+#vbody { flex: 1; display: flex; min-height: 0; }
+#vimgwrap { flex: 1; min-height: 0; overflow: auto; display: flex; align-items: center; justify-content: center; }
+#vimg { max-width: 100%; max-height: calc(100vh - 60px); object-fit: contain; cursor: zoom-in; }
+#vimg.zoom { max-width: none; max-height: none; cursor: zoom-out; }
+#vtext { width: 38%; overflow: auto; background: #f4efe4; color: #222; padding: 12px; margin: 0; white-space: pre-wrap; font: 13px/1.4 Consolas, monospace; display: none; }
+#vtext.show { display: block; }
+footer { text-align: center; color: var(--muted); font-size: 12px; padding: 16px; }
+@media (max-width: 760px) {
+  #layout { display: block; }
+  nav { width: auto; max-height: 40vh; position: static; border-right: 0; border-bottom: 1px solid var(--line); }
+  #vbody { flex-direction: column; }
+  #vtext { width: auto; height: 40%; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>📜 San Francisco Ladies Protection and Relief Society <small id="subtitle"></small></h1>
+  <input id="search" type="search" placeholder="🔍 Search the text of every page…">
+  <a id="source" href="https://github.com/SFLPRS/sflprs.github.io" target="_blank" rel="noopener" title="Source on GitHub"><img src="https://pushme-pullyou.github.io/assets/svg/github-octicon.svg" alt="Source on GitHub" width="22" height="22"></a>
+</header>
+<div id="layout">
+  <nav id="nav"></nav>
+  <main>
+    <p id="info"></p>
+    <div id="grid"></div>
+    <button id="more" hidden>Show more</button>
+  </main>
+</div>
+<div id="viewer">
+  <div id="vbar">
+    <button id="prev">◀ Prev</button>
+    <button id="next">Next ▶</button>
+    <b id="vtitle"></b>
+    <button id="turn">↻ Rotate</button>
+    <button id="textbtn">📝 Text</button>
+    <a id="vopen" target="_blank">🖼️ Full image</a>
+    <button id="close">✖ Close</button>
+  </div>
+  <div id="vbody">
+    <div id="vimgwrap"><img id="vimg" alt=""></div>
+    <pre id="vtext"></pre>
+  </div>
+</div>
+<footer>Page text was read by machine (OCR) and contains errors; handwriting is not searchable.<br>
+Records of the San Francisco Ladies’ Protection and Relief Society · <a href="https://github.com/SFLPRS">github.com/SFLPRS</a></footer>
+
+<script src="viewer-data.js"></script>
+<script src="viewer-text.js"></script>
+<script>
+// ARC (pages, series, volumes) comes from viewer-data.js
+// TXT (OCR text keyed by page path) comes from viewer-text.js
+
+const PAGE_SIZE = 120;
+
+// Each series lives in its own repository folder next to this one.
+// Opened from disk: ../board-of-trustees/...   Online: https://sflprs.github.io/board-of-trustees/...
+const BASE = location.protocol === "file:" ? "../" : "/";
+
+const state = {
+  pages: [],        // flat list of every page
+  shown: [],        // pages matching the current volume or search
+  limit: PAGE_SIZE, // how many cards are drawn
+  volume: null,     // selected volume id
+  query: "",
+  current: -1,      // index in state.shown open in the viewer
+  turn: 0,          // extra rotation (degrees) chosen in the viewer
+  showText: false
+};
+
+function loadSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("sflprs-viewer") || "{}");
+    state.showText = !!saved.showText;
+    state.volume = saved.volume || null;
+  } catch (e) { /* storage unavailable: use defaults */ }
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem("sflprs-viewer", JSON.stringify({ showText: state.showText, volume: state.volume }));
+  } catch (e) { /* ignore */ }
+}
+
+function buildPages() {
+  ARC.series.forEach(series => {
+    series.volumes.forEach(volume => {
+      volume.pages.forEach((page, i) => {
+        const path = `${volume.repo}/${volume.folder}/${page.n}`;
+        const folder = `${BASE}${volume.repo}/images/${volume.folder}/${page.n}`;
+        state.pages.push({
+          path,
+          name: page.n,
+          date: page.d || "",
+          rotate: page.r ? 360 - page.r : 0,
+          seq: i + 1,
+          volume: volume.id,
+          volumeTitle: `${series.title} — ${volume.title}`,
+          flat: (TXT[path] || "").replace(/\s+/g, " "),
+          image: `${folder}.jpg`,
+          thumb: folder.replace("/images/", "/thumbs/") + ".jpg"
+        });
+      });
+    });
+  });
+}
+
+function drawNav() {
+  const about = `<a class="about" href="about.html">ℹ️ About the Society and this archive</a>`;
+  const html = about + ARC.series.map(series => `
+    <h2>${series.title}</h2>
+    <p>${series.note || ""}</p>
+    ${series.volumes.map(volume => `
+      <button data-volume="${volume.id}" class="${volume.id === state.volume ? "active" : ""}">
+        ${volume.title}<span>${volume.pages.length}</span>
+      </button>`).join("")}
+  `).join("");
+  document.getElementById("nav").innerHTML = html;
+  document.getElementById("subtitle").textContent = `· ${state.pages.length.toLocaleString()} pages`;
+}
+
+function escapeHtml(text) {
+  return text.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+function snippet(text, query) {
+  const at = text.toLowerCase().indexOf(query.toLowerCase());
+  const start = Math.max(0, at - 60);
+  const piece = escapeHtml(text.slice(start, at + query.length + 80).replace(/\s+/g, " "));
+  const safeQuery = escapeHtml(query).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return (start > 0 ? "…" : "") + piece.replace(new RegExp(safeQuery, "ig"), m => `<mark>${m}</mark>`) + "…";
+}
+
+function filterPages() {
+  const query = state.query.trim().toLowerCase();
+  if (query.length > 1) {
+    const words = query.replace(/\s+/g, " ");
+    state.shown = state.pages.filter(p => p.flat.toLowerCase().includes(words));
+  } else if (state.volume) {
+    state.shown = state.pages.filter(p => p.volume === state.volume);
+  } else {
+    state.shown = state.pages;
+  }
+  state.limit = PAGE_SIZE;
+  drawGrid();
+}
+
+function drawGrid() {
+  const query = state.query.trim();
+  const searching = query.length > 1;
+  const cards = state.shown.slice(0, state.limit).map((p, i) => `
+    <div class="card" data-index="${i}">
+      <img loading="lazy" src="${p.thumb}" alt="${p.name}" style="transform: rotate(${p.rotate}deg)">
+      <div title="${p.name}">${p.date || "&nbsp;"} · p.${p.seq}</div>
+      ${searching ? `<div class="snip">${snippet(p.flat, query.replace(/\s+/g, " "))}</div><div>${p.volumeTitle}</div>` : ""}
+    </div>`).join("");
+  document.getElementById("grid").innerHTML = cards;
+  document.getElementById("more").hidden = state.shown.length <= state.limit;
+
+  const volume = findVolume(state.volume);
+  let info = `<b>${state.shown.length.toLocaleString()}</b> pages`;
+  if (searching) info = `<b>${state.shown.length.toLocaleString()}</b> pages contain “${escapeHtml(query)}”`;
+  else if (volume) info = `<b>${volume.title}</b> · ${volume.pages.length} pages${volume.years ? ` · dates found in the text: ${volume.years}` : ""}<br>${volume.note || ""}`;
+  else info = `All <b>${state.pages.length.toLocaleString()}</b> pages. Pick a volume on the left, or search.`;
+  document.getElementById("info").innerHTML = info;
+}
+
+function findVolume(id) {
+  for (const series of ARC.series) {
+    const found = series.volumes.find(v => v.id === id);
+    if (found) return found;
+  }
+  return null;
+}
+
+function openViewer(index) {
+  state.current = index;
+  const p = state.shown[index];
+  const img = document.getElementById("vimg");
+  img.classList.remove("zoom");
+  state.turn = p.rotate;
+  img.style.transform = `rotate(${state.turn}deg)`;
+  img.src = p.image;
+  document.getElementById("vopen").href = p.image;
+  document.getElementById("vtitle").textContent = [p.volumeTitle, `page ${p.seq}`, p.date, p.name].filter(Boolean).join(" · ");
+  document.getElementById("vtext").textContent = TXT[p.path] || "(no text recognised on this page)";
+  document.getElementById("vtext").classList.toggle("show", state.showText);
+  document.getElementById("viewer").classList.add("open");
+}
+
+function closeViewer() {
+  document.getElementById("viewer").classList.remove("open");
+  state.current = -1;
+}
+
+function step(delta) {
+  const next = state.current + delta;
+  if (next >= 0 && next < state.shown.length) openViewer(next);
+}
+
+function onNavClick(event) {
+  const button = event.target.closest("button");
+  if (!button) return;
+  state.volume = button.dataset.volume;
+  state.query = "";
+  document.getElementById("search").value = "";
+  saveSettings();
+  drawNav();
+  filterPages();
+  window.scrollTo(0, 0);
+}
+
+function onGridClick(event) {
+  const card = event.target.closest(".card");
+  if (card) openViewer(Number(card.dataset.index));
+}
+
+function onSearch(event) {
+  state.query = event.target.value;
+  filterPages();
+}
+
+function onMore() {
+  state.limit += PAGE_SIZE;
+  drawGrid();
+}
+
+function onToggleText() {
+  state.showText = !state.showText;
+  document.getElementById("vtext").classList.toggle("show", state.showText);
+  saveSettings();
+}
+
+function onTurn() {
+  state.turn = (state.turn + 90) % 360;
+  document.getElementById("vimg").style.transform = `rotate(${state.turn}deg)`;
+}
+
+function onZoom(event) {
+  event.target.classList.toggle("zoom");
+}
+
+function onKey(event) {
+  if (state.current < 0) return;
+  if (event.key === "ArrowRight") step(1);
+  if (event.key === "ArrowLeft") step(-1);
+  if (event.key === "Escape") closeViewer();
+}
+
+function init() {
+  loadSettings();
+  buildPages();
+  if (!findVolume(state.volume)) state.volume = ARC.series[0].volumes[0].id;
+  drawNav();
+  filterPages();
+}
+
+document.getElementById("nav").addEventListener("click", onNavClick);
+document.getElementById("grid").addEventListener("click", onGridClick);
+document.getElementById("search").addEventListener("input", onSearch);
+document.getElementById("more").addEventListener("click", onMore);
+document.getElementById("textbtn").addEventListener("click", onToggleText);
+document.getElementById("turn").addEventListener("click", onTurn);
+document.getElementById("vimg").addEventListener("click", onZoom);
+document.getElementById("prev").addEventListener("click", () => step(-1));
+document.getElementById("next").addEventListener("click", () => step(1));
+document.getElementById("close").addEventListener("click", closeViewer);
+document.addEventListener("keydown", onKey);
+init();
+</script>
+</body>
+</html>

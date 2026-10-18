@@ -1,0 +1,36 @@
+{
+	"folders": [
+		{
+			"name": "sflprs.github.io",
+			"path": "."
+		},
+		{
+			"name": "special-items",
+			"path": "../special-items"
+		},
+		{
+			"name": "board-of-directors-2000-2020",
+			"path": "../board-of-directors-2000-2020"
+		},
+		{
+			"name": "board-of-managers-1941-1968",
+			"path": "../board-of-managers-1941-1968"
+		},
+		{
+			"name": "board-of-managers-1972-1984",
+			"path": "../board-of-managers-1972-1984"
+		},
+		{
+			"name": "board-of-managers-1989-2000",
+			"path": "../board-of-managers-1989-2000"
+		},
+		{
+			"name": "board-of-trustees-1906-1999",
+			"path": "../board-of-trustees-1906-1999"
+		},
+		{
+			"name": "crocker-old-peoples-home-1925-1957",
+			"path": "../crocker-old-peoples-home-1925-1957"
+		}
+	]
+}
