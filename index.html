@@ -23,6 +23,7 @@ body { margin: 0; font: 15px/1.45 Georgia, "Times New Roman", serif; color: var(
 header { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
 header h1 { font-size: 18px; margin: 0; flex: 1 1 auto; }
 header h1 .logo { vertical-align: middle; border-radius: 4px; margin: -4px 4px 0 0; }
+header h1 a { color: inherit; text-decoration: none; }
 header h1 small { color: var(--muted); font-weight: normal; }
 #source { display: flex; text-decoration: none; }
 #search { flex: 1 1 260px; max-width: 420px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
@@ -73,7 +74,7 @@ footer { text-align: center; color: var(--muted); font-size: 12px; padding: 16px
 </head>
 <body>
 <header>
-  <h1><img class="logo" src="apple-touch-icon.png" alt="" width="26" height="26"> San Francisco Ladies Protection and Relief Society <small id="subtitle"></small></h1>
+  <h1><a href="index.html" title="Reload"><img class="logo" src="apple-touch-icon.png" alt="" width="26" height="26"> San Francisco Ladies Protection and Relief Society</a> <small id="subtitle"></small></h1>
   <input id="search" type="search" placeholder="🔍 Search the text of every page…">
   <a id="source" href="https://github.com/SFLPRS/sflprs.github.io" target="_blank" rel="noopener" title="Source on GitHub"><img src="https://pushme-pullyou.github.io/assets/svg/github-octicon.svg" alt="Source on GitHub" width="22" height="22"></a>
 </header>
